@@ -18,10 +18,10 @@ public class MainApp {
       UserService userService = context.getBean(UserService.class);
 
       // ПУНКТ 5
-//      User user1 = userService.getUserByCar("ГАЗ", 2106);
-//      System.out.println(user1);
-//      User user2 = userService.getUserByCar("Lada", 777);
-//      System.out.println(user2);
+      User user1 = userService.getUserByCar("ГАЗ", 2106);
+      System.out.println(user1);
+      User user2 = userService.getUserByCar("Lada", 777);
+      System.out.println(user2);
 
       // ПУНКТ 4
 

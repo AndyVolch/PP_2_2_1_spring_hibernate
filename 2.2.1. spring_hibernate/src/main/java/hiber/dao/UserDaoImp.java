@@ -1,21 +1,24 @@
 package hiber.dao;
 
-import hiber.model.Car;
 import hiber.model.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
 public class UserDaoImp implements UserDao {
+   private SessionFactory sessionFactory;
 
    @Autowired
-   private SessionFactory sessionFactory;
+   public void setSessionFactory(SessionFactory sessionFactory) {
+      this.sessionFactory = sessionFactory;
+   }
 
    @Override
    public void add(User user) {
@@ -31,14 +34,14 @@ public class UserDaoImp implements UserDao {
    @Override
    public User getUserByCar(String model, int series) {
       Session session = sessionFactory.getCurrentSession();
-      Query query = session.createQuery("from Car where model=:model " +
-              "and series=:series");
+      Query query = session.createQuery("from User u where u.car.model=:model " +
+              "and u.car.series=:series");
       query.setParameter("model", model);
       query.setParameter("series", series);
-      List<Car> carList = query.getResultList();
-      if (carList.size() > 0) {
-         return carList.get(0).getUser();
-      } else {
+      try {
+         return (User) query.getSingleResult();
+      } catch (NoResultException e) {
+         System.out.println("Пользователя с таким автомобилем не сущестует");
          return null;
       }
    }
